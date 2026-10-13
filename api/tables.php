@@ -1,0 +1,21 @@
+<?php
+// Généré : correspondance tables / colonnes lisibles (la fiche complète est dans la colonne data, au format JSON)
+$KT_TABLES = [
+  'inscription' => ['matricule' => 'mat|pid|code', 'code' => 'code', 'annee' => 'annee', 'statut' => 'statut', 'civilite' => 'civ', 'nom' => 'nom', 'prenoms' => 'prenom', 'date_naissance' => 'dn', 'lieu_naissance' => 'lieu', 'categorie' => 'cat', 'niveau' => 'niv', 'decision' => 'decision', 'contact1' => '#c1'],
+  'preinscription' => ['matricule' => 'mat|pid|code', 'code' => 'code', 'annee' => 'annee', 'statut' => 'statut', 'civilite' => 'civ', 'nom' => 'nom', 'prenoms' => 'prenom', 'date_naissance' => 'dn', 'lieu_naissance' => 'lieu', 'categorie' => 'cat', 'niveau' => 'niv', 'decision' => 'decision', 'contact1' => '#c1'],
+  'historique_inscription' => ['matricule' => 'mat|pid|code', 'code' => 'code', 'annee' => 'annee', 'statut' => 'statut', 'civilite' => 'civ', 'nom' => 'nom', 'prenoms' => 'prenom', 'date_naissance' => 'dn', 'lieu_naissance' => 'lieu', 'categorie' => 'cat', 'niveau' => 'niv', 'decision' => 'decision', 'contact1' => '#c1'],
+  'historique_preinscription' => ['matricule' => 'mat|pid|code', 'code' => 'code', 'annee' => 'annee', 'statut' => 'statut', 'civilite' => 'civ', 'nom' => 'nom', 'prenoms' => 'prenom', 'date_naissance' => 'dn', 'lieu_naissance' => 'lieu', 'categorie' => 'cat', 'niveau' => 'niv', 'decision' => 'decision', 'contact1' => '#c1'],
+  'animateur' => ['code' => 'code', 'annee' => 'annee', 'civilite' => 'civ', 'nom' => 'nom', 'prenoms' => 'prenom', 'contact1' => '#c1', 'categorie' => 'cat', 'niveau' => 'niv', 'debut_ndi' => 'deb'],
+  'formation_continue' => ['annee' => 'annee', 'statut' => 'statut', 'civilite' => 'civ', 'nom' => 'nom', 'prenoms' => 'prenom', 'contact1' => '#c1'],
+  'bureau_membre' => ['annee' => 'annee', 'bureau' => 'bureau', 'nom' => 'nom', 'contact1' => '#c1', 'fonction' => 'fonction'],
+  'sacrement' => ['matricule' => 'v.mat', 'nom' => 'v.nom', 'prenoms' => 'v.prenom', 'num_bapteme' => 'v.bnum', 'date_bapteme' => 'v.bdate', 'date_confirmation' => 'v.cdate'],
+  'compilation' => ['annee' => 'a', 'categorie' => 'b', 'date_compilation' => 'v.date', 'par' => 'v.op', 'effectif' => 'v.n'],
+  'resultat' => ['annee' => 'a', 'matricule' => 'b', 'resultat' => 'v.res'],
+  'correction_identite' => ['nom' => 'v.nom', 'prenoms' => 'v.prenom', 'date_naissance' => 'v.dn', 'lieu_naissance' => 'v.lieu'],
+  'attestation_catechumene' => ['matricule' => 'pid', 'numero' => 'num', 'date_edition' => 'date'],
+  'attestation_animateur' => ['matricule' => 'pid', 'numero' => 'num', 'date_edition' => 'date'],
+  'annee_catechetique' => ['statut' => 'st', 'ouverture' => 'ouv', 'fermeture' => 'fer'],
+  'archivage' => ['annee' => 'y', 'table_archivee' => 't', 'lignes' => 'n', 'date_archivage' => 'd', 'par' => 'op'],
+  'historique_operation' => ['date_op' => 't', 'profil' => 'u', 'action' => '@a', 'matricule' => 'c'],
+  'utilisateur' => ['nom' => 'nom', 'groupe' => 'groupe', 'categorie' => 'cat', 'niveau' => 'niv', 'actif' => 'actif', 'doit_changer' => 'chg'],
+];

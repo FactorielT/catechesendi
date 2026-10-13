@@ -1,0 +1,5 @@
+# Les fichiers internes de l'API ne sont pas accessibles depuis le navigateur
+<FilesMatch "^(config|lib|tables)\.php$">
+  Require all denied
+</FilesMatch>
+Options -Indexes

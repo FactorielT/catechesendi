@@ -1,0 +1,14 @@
+# Fichiers contenant des secrets
+.env
+.env.*
+!.env.example
+
+# Configuration locale et sauvegardes
+config.local.php
+config.production.php
+*.bak
+*.log
+
+# Dépendances et fichiers temporaires
+.DS_Store
+Thumbs.db
