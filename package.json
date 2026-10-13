@@ -1,0 +1,22 @@
+{
+  "name": "catechesendi",
+  "version": "1.0.0",
+  "description": "Site officiel et application de gestion de la catéchèse NDI Riviera Palmeraie (Node.js + PostgreSQL)",
+  "main": "server.js",
+  "private": true,
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node server.js",
+    "init-db": "node scripts/init-db.js",
+    "update-db": "node scripts/init-db.js --update"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "connect-pg-simple": "^9.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "pg": "^8.13.1"
+  }
+}
