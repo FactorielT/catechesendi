@@ -250,7 +250,7 @@ body.site .page header .siteteam{grid-column:1/-1;justify-self:end;align-self:en
 <section id="home" hidden>
   <p class="cta" id="cta"><span>Pré-inscription 2026-2027 cliquer sur</span><button class="go" id="gi">Inscrire ici</button></p>
   <div class="hero"><div id="hs"></div><button class="ar l" id="hp">‹</button><button class="ar r" id="hn">›</button><div class="cap" id="hc"></div><div class="dots" id="hd"></div></div>
-  <h2 class="pt">PAROISSE NOTRE DAME DE L'INCARNATION</h2>
+  <h2 class="pt">PAROISSE NOTRE-DAME DE L’INCARNATION</h2>
   <div class="info">
     <div class="card ic"><div class="ph" id="p1"></div><small>Le Curé</small><b id="n1"></b><span class="ct"></span></div>
     <div class="card ic"><div class="ph" id="p2"></div><small>Responsable de la coordination</small><b id="n2"></b><span class="ct"></span></div>
@@ -379,8 +379,9 @@ body.site .page header .siteteam{grid-column:1/-1;justify-self:end;align-self:en
       <label class="popt"><input type="radio" name="cfgmode" value="mobile"><span><b>Paiement par Mobile Money</b><small>Débit direct sur le compte Mobile Money du catéchumène.</small></span></label>
     </div>
     <h3>Opérateurs Mobile Money acceptés</h3><div class="row" id="cfgops"></div>
-    <h3>Montant des frais (FCFA) par catégorie</h3>
-    <div class="grid"><div><label for="fe">ENFANT</label><input id="fe" type="number" min="0" step="100"></div><div><label for="fj">JEUNE</label><input id="fj" type="number" min="0" step="100"></div><div><label for="fa2">ADULTE</label><input id="fa2" type="number" min="0" step="100"></div></div>
+    <h3>Montant de l'inscription (FCFA)</h3>
+    <p class="muted" style="margin:0 0 8px">Fixé chaque année par le Curé, identique pour toutes les catégories (enfants, jeunes, adultes).</p>
+    <div class="grid"><div><label for="fmt1">Montant pour l'année en cours</label><input id="fmt1" type="number" min="0" step="100" placeholder="5000"></div></div>
     <div class="row" style="margin-top:14px;align-items:center"><button class="btn" id="psv">Enregistrer</button><span id="pmsg"></span></div>
   </div>
 </section>
@@ -1222,7 +1223,7 @@ body.site .page header .siteteam{grid-column:1/-1;justify-self:end;align-self:en
 <label for="pw2" style="margin-top:8px">Confirmer le nouveau mot de passe</label><input id="pw2" type="password" autocomplete="new-password">
 <p class="err" id="pwm" style="margin:8px 0 0"></p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" class="btn" id="pwok">Enregistrer</button><button type="button" class="btn sec" id="pwno">Annuler</button></div></div></div>
 <div id="paym" hidden><div class="card" role="dialog" aria-modal="true" aria-labelledby="pmt"><h2 id="pmt">Paiement Mobile Money</h2><div id="pmb"></div></div></div>
-<div id="fiche" hidden><div class="card"><div class="row noprint fbar" style="margin-bottom:12px;position:sticky;top:-16px;z-index:2;background:var(--card);padding:10px 0;justify-content:flex-end;border-bottom:1px solid var(--bd)"><button class="btn" id="pr">Imprimer / PDF</button><button class="btn sec" id="fclose">Fermer</button></div><div class="fh"><img id="fl" alt="Logo"><div><b>PAROISSE NOTRE DAME DE L'INCARNATION</b><br>Catéchèse — Année KT <span id="fyr">2026-2027</span></div></div><h2 id="ft" style="text-align:center"></h2><div id="fb"></div>
+<div id="fiche" hidden><div class="card"><div class="row noprint fbar" style="margin-bottom:12px;position:sticky;top:-16px;z-index:2;background:var(--card);padding:10px 0;justify-content:flex-end;border-bottom:1px solid var(--bd)"><button class="btn" id="pr">Imprimer / PDF</button><button class="btn sec" id="fclose">Fermer</button></div><div class="fh"><img id="fl" alt="Logo"><div><b>PAROISSE NOTRE-DAME DE L’INCARNATION</b><br>Catéchèse — Année KT <span id="fyr">2026-2027</span></div></div><h2 id="ft" style="text-align:center"></h2><div id="fb"></div>
 </div></div>
 
 <script>
@@ -1282,7 +1283,7 @@ DB.anim=DB.anim||[];
 // Animateurs : une seule table ANIMATEUR (toutes années), sans historique ni archivage
 if(DB.arch.anim&&DB.arch.anim.length){DB.arch.anim.forEach(d=>{delete d.archive;DB.anim.push(d)});DB.arch.anim=[]}
 DB.anim.forEach(d=>{if(!d.cak)d.cak=dig(d.c1)+(d.annee||"")});
-const allRec=()=>[...DB.r,...DB.arch.pre,...DB.arch.ins];
+const allRec=()=>[...DB.r,...DB.arch.pre.filter(d=>!d.preCopy),...DB.arch.ins];
 const allAnim=()=>DB.anim;
 function dig(v){return String(v||"").replace(/\D/g,"")}
 function archiveYear(id){const keep=[];let np=0,ni=0;
@@ -1371,7 +1372,7 @@ function recap(d){
     rows.forEach(([l,v])=>{const a=document.createElement("dt"),b=document.createElement("dd");a.textContent=l;b.textContent=v||"";x.append(a,b)});f.appendChild(x)}
   return f}
 const payLbl=d=>!d.pay?"—":d.pay.st==="payé"?"Payé":"À régler à la paroisse";
-function showFiche(d){
+function showFiche(d){window.KTFICHE=d;
   $("fl").src=document.querySelector(".brand img").src;
   $("fyr").textContent=d.annee||ANNEE;$("ft").textContent=d.kind==="anim"?"FICHE D'INSCRIPTION ANIMATEUR(TRICE)":d.statut==="ins"?"FICHE D'INSCRIPTION":"FICHE DE PRÉ-INSCRIPTION";
   const b=$("fb");b.replaceChildren(recap(d));
@@ -1435,7 +1436,7 @@ $("fcxl").onclick=async()=>{const rows=FCROWS;if(!rows.length)return infoMsg("Au
     const ok=await saveBlob(name,new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));if(ok)log("Formation continue : export Excel ("+rows.length+" lignes)","");return ok||infoMsg("Téléchargement indisponible ici.",false)}
   const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';const csv="\ufeff"+aoa.map(r=>r.map(q).join(";")).join("\r\n");if(!await saveBlob(name.replace(".xlsx",".csv"),new Blob([csv],{type:"text/csv"})))infoMsg("Téléchargement indisponible ici.",false)};
 $("fcpdf").onclick=()=>{const rows=FCROWS;if(!rows.length)return infoMsg("Aucune ligne à exporter.",false);
-  const p=$("plist");p.innerHTML="";const h=document.createElement("h2");h.textContent="PAROISSE NOTRE-DAME DE L'INCARNATION — INSCRITS DE LA FORMATION CONTINUE";
+  const p=$("plist");p.innerHTML="";const h=document.createElement("h2");h.textContent="PAROISSE NOTRE-DAME DE L’INCARNATION — INSCRITS DE LA FORMATION CONTINUE";
   const m=document.createElement("p");m.textContent="Année : "+($("fcfy").value||"toutes les années")+" · Statut : "+($("fcfs").value||"tous")+" · "+rows.length+" ligne(s) · édité le "+new Date().toLocaleDateString("fr-FR");
   const t=document.createElement("table"),th=document.createElement("thead"),tr0=document.createElement("tr");FCCOLS.forEach(c=>{const x=document.createElement("th");x.textContent=c[0];tr0.appendChild(x)});th.appendChild(tr0);t.appendChild(th);
   const tb=document.createElement("tbody");rows.forEach(d=>{const tr=document.createElement("tr");FCCOLS.forEach(c=>{const x=document.createElement("td");x.textContent=c[2]?fcDt(c[1](d)):c[1](d);tr.appendChild(x)});tb.appendChild(tr)});t.appendChild(tb);
@@ -1522,7 +1523,7 @@ $("bl_xl").onclick=async()=>{const rows=BLROWS;if(!rows.length)return infoMsg("A
   if(await loadXLSX()){const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(aoa),"Membres");const ok=await saveBlob(name,new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));if(ok)log("Bureau KT : export Excel ("+rows.length+" lignes)","");return ok||infoMsg("Téléchargement indisponible ici.",false)}
   const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';if(!await saveBlob(name.replace(".xlsx",".csv"),new Blob(["\ufeff"+aoa.map(r=>r.map(q).join(";")).join("\r\n")],{type:"text/csv"})))infoMsg("Téléchargement indisponible ici.",false)};
 $("bl_pdf").onclick=()=>{const rows=BLROWS;if(!rows.length)return infoMsg("Aucune ligne à exporter.",false);
-  const p=$("plist");p.innerHTML="";const h=document.createElement("h2");h.textContent="PAROISSE NOTRE-DAME DE L'INCARNATION — LISTE DES MEMBRES DU BUREAU";
+  const p=$("plist");p.innerHTML="";const h=document.createElement("h2");h.textContent="PAROISSE NOTRE-DAME DE L’INCARNATION — LISTE DES MEMBRES DU BUREAU";
   const m=document.createElement("p");m.textContent="Année : "+$("bl_y").value+" · Bureau : "+($("bl_b").value||"tous")+" · "+rows.length+" membre(s) · édité le "+new Date().toLocaleDateString("fr-FR");
   const t=document.createElement("table"),th=document.createElement("thead"),tr0=document.createElement("tr");BLCOLS.forEach(c=>{const x=document.createElement("th");x.textContent=c[0];tr0.appendChild(x)});th.appendChild(tr0);t.appendChild(th);
   const tb=document.createElement("tbody");rows.forEach(d=>{const tr=document.createElement("tr");[d.bureau,d.nom,d.c1,d.fonction].forEach(v=>{const x=document.createElement("td");x.textContent=v||"";tr.appendChild(x)});const x=document.createElement("td");if(d.photo){const im=document.createElement("img");im.src=d.photo;im.style.cssText="width:42px;height:42px;object-fit:cover;border-radius:50%";x.appendChild(im)}tr.appendChild(x);tb.appendChild(tr)});t.appendChild(tb);
@@ -1560,7 +1561,7 @@ function attShow(k,L){ATTCUR={k,L,mk:attDoc};const d=L[L.length-1],ok=attOk(L),P
   else if(ok){ban.className="aban wa";ban.textContent="⚠ La "+NA+"ème année est validée, mais l'historique ne contient pas : "+miss.join(", ").toLowerCase()+" (années suivies avant l'informatisation ou dans une autre paroisse). Vérifiez avant d'éditer l'attestation."}
   else{ban.className="aban wa";ban.textContent="ℹ Parcours en cours : dernier niveau suivi "+(d.niv||"—").toLowerCase()+" ("+d.annee+(d.decision?", "+d.decision:"")+"). L'attestation de sortie peut être éditée, par exemple en cas de déménagement ou de changement de paroisse. Indiquez le motif ci-dessous."}
   P.appendChild(ban);
-  const sg=document.createElement("div");sg.className="asig";sg.innerHTML='<div><label for="att_pres">Président(e) de la coordination</label><input id="att_pres"></div><div><label for="att_cure">Curé de la paroisse</label><input id="att_cure"></div><div style="grid-column:1/-1"><label for="att_motif">Motif de la sortie (facultatif)</label><input id="att_motif" list="att_ml" placeholder="Ex : Déménagement, changement de paroisse…"><datalist id="att_ml"><option>Fin du parcours catéchétique</option><option>Déménagement</option><option>Changement de paroisse</option><option>Départ hors du pays</option><option>Raisons familiales</option></datalist></div>';P.appendChild(sg);
+  const sg=document.createElement("div");sg.className="asig";sg.innerHTML='<div><label for="att_pres">Président(e) de la coordination</label><input id="att_pres"></div><div><label for="att_cure">Curé de la paroisse</label><input id="att_cure"></div><div style="grid-column:1/-1"><label for="att_motif">Motif de la sortie (facultatif)</label><input id="att_motif" list="att_ml" placeholder="Ex : Déménagement, changement de paroisse…"><datalist id="att_ml"><option>Fin du parcours catéchétique</option><option>Déménagement</option><option>Changement de paroisse</option><option>Départ hors du pays</option><option>Raisons scolaires</option><option>Raisons familiales</option></datalist></div>';P.appendChild(sg);
   $("att_pres").value=DB.cfg.att.pres;$("att_cure").value=DB.cfg.att.cure;{const a0=DB.att.find(x=>x.pid===k);$("att_motif").value=a0&&a0.motif!==undefined?a0.motif:(ok?"Fin du parcours catéchétique":"")}
   const ac=document.createElement("div");ac.className="aact";const b1=document.createElement("button");b1.type="button";b1.className="abtn";b1.textContent="📜 Éditer l'attestation";b1.disabled=false;
   const b2=document.createElement("button");b2.type="button";b2.className="abtn sec";b2.textContent="🖨 Imprimer / PDF";b2.hidden=true;ac.append(b1,b2);P.appendChild(ac);
@@ -1574,11 +1575,11 @@ function attShow(k,L){ATTCUR={k,L,mk:attDoc};const d=L[L.length-1],ok=attOk(L),P
 function attDoc(C){const L=C.L,d=L[L.length-1],ID={};["civ","nom","prenom","dn","lieu"].forEach(k=>{for(let j=L.length-1;j>=0;j--)if(L[j][k]){ID[k]=L[j][k];break}});const a=C.a||{num:"",date:""},f=L[0],el=document.createElement("div");el.className="attdoc";
   const fem=ID.civ==="Mme"||ID.civ==="Mlle",e=fem?"e":"",FIN=attOk(L),enc=!FIN&&d.annee===ANNEE&&!d.decision;
   const logo=(document.querySelector(".brand img")||{}).src||"";
-  el.innerHTML='<div class="xfr"><div class="xwm">✝</div><div class="xhd"><img alt=""><div><div class="xp1">PAROISSE NOTRE-DAME DE L\'INCARNATION</div><div class="xp2">Riviera Palmeraie — Abidjan, Côte d\'Ivoire</div></div><div class="xnum"></div></div>'+
+  el.innerHTML='<div class="xfr"><div class="xwm">✝</div><div class="xhd"><img alt=""><div><div class="xp1">PAROISSE NOTRE-DAME DE L’INCARNATION</div><div class="xp2">Riviera Palmeraie — Abidjan, Côte d\'Ivoire</div></div><div class="xnum"></div></div>'+
    '<div class="xtt">ATTESTATION DE CATÉCHÈSE NDI</div><div class="xst2"></div><div class="xorn">✝</div>'+
    '<p class="xtx xt1"></p><div class="xidg"></div><p class="xtx xt2"></p><table class="xpc"><thead><tr><th>Année catéchétique</th><th>Niveau</th><th>Catégorie</th><th>Jour de cours</th><th>Décision</th></tr></thead><tbody></tbody></table>'+
    '<div class="xres"></div><p class="xtx xt3"></p><p class="xdt"></p><div class="xsg"><div><div class="xr">Le Président de la coordination</div><div class="xsp"></div><div class="xn xp"></div></div><div><div class="xr">Le Curé de la paroisse</div><div class="xsp"><div class="xseal">Cachet</div></div><div class="xn xc"></div></div></div>'+
-   '<div class="xft">Catéchèse NDI Riviera Palmeraie · contact@catechesendi.com · Document délivré le <span class="xfd"></span></div></div>';
+   '<div class="xft">Catéchèse NDI Riviera Palmeraie · contact@catechesendi.com · Document édité le <span class="xfd"></span></div></div>';
   const im=el.querySelector(".xhd img");if(logo)im.src=logo;else im.remove();
   el.querySelector(".xnum").textContent=a.num?"N° "+a.num:"";el.querySelector(".xst2").textContent=FIN?"de fin de parcours catéchétique":"de parcours catéchétique";
   el.querySelector(".xt1").textContent="Je soussigné, Curé de la Paroisse Notre-Dame de l'Incarnation de la Riviera Palmeraie, atteste que :";
@@ -1623,7 +1624,7 @@ function attaShow(k,L){const d=L[L.length-1],I=ataInfo(L),P=$("att_pan");ATTCUR=
   const hb=hl.querySelectorAll("b");hb[0].textContent=I.deb||"Non renseigné";hb[1].textContent=I.n+" an"+(I.n>1?"s":"");hb[2].textContent=I.last;P.appendChild(hl);
   const tl=document.createElement("div");tl.className="atl";[...L].reverse().forEach(x=>{const r=document.createElement("div");r.innerHTML='<b></b><span></span>';r.querySelector("b").textContent=x.annee;r.querySelector("span").textContent=[x.cat,x.niv,x.jour].filter(Boolean).join(" · ")||"—";tl.appendChild(r)});P.appendChild(tl);
   const ban=document.createElement("div");ban.className="aban "+(I.deb?"ok":"wa");ban.textContent=I.deb?"✔ L'attestation peut être éditée. Le début d'année d'animation à NDI ("+I.deb+") sera mis en évidence.":"⚠ Le début d'année d'animation à NDI n'est pas renseigné : l'attestation utilisera la première année enregistrée ("+L[0].annee+"). Vous pouvez le compléter lors de la ré-inscription de l'animateur(trice).";P.appendChild(ban);
-  const sg=document.createElement("div");sg.className="asig";sg.innerHTML='<div><label for="att_pres">Président(e) de la coordination</label><input id="att_pres"></div><div><label for="att_cure">Curé de la paroisse</label><input id="att_cure"></div><div style="grid-column:1/-1"><label for="att_motif">Motif de la sortie (facultatif)</label><input id="att_motif" list="ata_ml" placeholder="Ex : Déménagement, nouvelle mission…"><datalist id="ata_ml"><option>Fin de mission</option><option>Déménagement</option><option>Changement de paroisse</option><option>Raisons professionnelles</option><option>Raisons familiales</option><option>Départ hors du pays</option></datalist></div>';P.appendChild(sg);
+  const sg=document.createElement("div");sg.className="asig";sg.innerHTML='<div><label for="att_pres">Président(e) de la coordination</label><input id="att_pres"></div><div><label for="att_cure">Curé de la paroisse</label><input id="att_cure"></div><div style="grid-column:1/-1"><label for="att_motif">Motif de la sortie (facultatif)</label><input id="att_motif" list="ata_ml" placeholder="Ex : Déménagement, nouvelle mission…"><datalist id="ata_ml"><option>Fin de mission</option><option>Déménagement</option><option>Changement de paroisse</option><option>Raisons professionnelles</option><option>Raisons scolaires</option><option>Raisons familiales</option><option>Départ hors du pays</option></datalist></div>';P.appendChild(sg);
   $("att_pres").value=DB.cfg.att.pres;$("att_cure").value=DB.cfg.att.cure;{const a0=DB.attA.find(x=>x.pid===k);$("att_motif").value=a0&&a0.motif?a0.motif:""}
   const ac=document.createElement("div");ac.className="aact";const b1=document.createElement("button");b1.type="button";b1.className="abtn";b1.textContent="📜 Éditer l'attestation";
   const b2=document.createElement("button");b2.type="button";b2.className="abtn sec";b2.textContent="🖨 Imprimer / PDF";b2.hidden=true;ac.append(b1,b2);P.appendChild(ac);
@@ -1635,12 +1636,12 @@ function attaShow(k,L){const d=L[L.length-1],I=ataInfo(L),P=$("att_pan");ATTCUR=
   b2.onclick=()=>attPrint();P.scrollIntoView({behavior:"smooth",block:"start"})}
 function attaDoc(C){const L=C.L,d=L[L.length-1],a=C.a||{num:"",date:""},I=ataInfo(L),ID={};["civ","nom","prenom","dn","lieu"].forEach(k=>{for(let j=L.length-1;j>=0;j--)if(L[j][k]){ID[k]=L[j][k];break}});
   const fem=ID.civ==="Mme"||ID.civ==="Mlle",e=fem?"e":"",el=document.createElement("div");el.className="attdoc";const logo=(document.querySelector(".brand img")||{}).src||"";
-  el.innerHTML='<div class="xfr"><div class="xwm">✝</div><div class="xhd"><img alt=""><div><div class="xp1">PAROISSE NOTRE-DAME DE L\'INCARNATION</div><div class="xp2">Riviera Palmeraie — Abidjan, Côte d\'Ivoire</div></div><div class="xnum"></div></div>'+
+  el.innerHTML='<div class="xfr"><div class="xwm">✝</div><div class="xhd"><img alt=""><div><div class="xp1">PAROISSE NOTRE-DAME DE L’INCARNATION</div><div class="xp2">Riviera Palmeraie — Abidjan, Côte d\'Ivoire</div></div><div class="xnum"></div></div>'+
    '<div class="xtt"></div><div class="xst2"></div><div class="xorn">✝</div><p class="xtx xt1"></p><div class="xidg"></div>'+
    '<div class="xdeb"><span>Début d\'année d\'animation à NDI</span><b></b><small></small></div>'+
    '<p class="xtx xt2"></p><table class="xpc"><thead><tr><th>Année catéchétique</th><th>Catégorie</th><th>Niveau enseigné</th><th>Jour de cours</th></tr></thead><tbody></tbody></table>'+
    '<p class="xtx xt3"></p><p class="xdt"></p><div class="xsg"><div><div class="xr">Le Président de la coordination</div><div class="xsp"></div><div class="xn xp"></div></div><div><div class="xr">Le Curé de la paroisse</div><div class="xsp"><div class="xseal">Cachet</div></div><div class="xn xc"></div></div></div>'+
-   '<div class="xft">Catéchèse NDI Riviera Palmeraie · contact@catechesendi.com · Document délivré le <span class="xfd"></span></div></div>';
+   '<div class="xft">Catéchèse NDI Riviera Palmeraie · contact@catechesendi.com · Document édité le <span class="xfd"></span></div></div>';
   const im=el.querySelector(".xhd img");if(logo)im.src=logo;else im.remove();
   el.querySelector(".xnum").textContent=a.num?"N° "+a.num:"";el.querySelector(".xtt").textContent=fem?"ATTESTATION D'ANIMATRICE NDI":"ATTESTATION D'ANIMATEUR NDI";el.querySelector(".xst2").textContent="de service en catéchèse";
   el.querySelector(".xt1").textContent="Je soussigné, Curé de la Paroisse Notre-Dame de l'Incarnation de la Riviera Palmeraie, atteste que :";
@@ -1739,7 +1740,7 @@ $("sl_xl").onclick=async()=>{const rows=SACROWS;if(!rows.length)return infoMsg("
   if(await loadXLSX()){const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(aoa),"Sacrements");const ok=await saveBlob(name,new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));if(ok)log("Sacrements : export Excel ("+rows.length+" lignes)","");return ok||infoMsg("Téléchargement indisponible ici.",false)}
   const q2=v=>'"'+String(v??"").replace(/"/g,'""')+'"';if(!await saveBlob(name.replace(".xlsx",".csv"),new Blob(["\ufeff"+aoa.map(r=>r.map(q2).join(";")).join("\r\n")],{type:"text/csv"})))infoMsg("Téléchargement indisponible ici.",false)};
 $("sl_pdf").onclick=()=>{const rows=SACROWS;if(!rows.length)return infoMsg("Aucune ligne à exporter.",false);
-  const p=$("plist");p.innerHTML="";const hh=document.createElement("h2");hh.textContent="PAROISSE NOTRE-DAME DE L'INCARNATION — TABLE DES SACREMENTS";
+  const p=$("plist");p.innerHTML="";const hh=document.createElement("h2");hh.textContent="PAROISSE NOTRE-DAME DE L’INCARNATION — TABLE DES SACREMENTS";
   const m=document.createElement("p");m.textContent="Année : "+($("sl_y").value||"toutes")+" · Catégorie : "+($("sl_c").value||"toutes")+" · "+rows.length+" dossier(s) · édité le "+new Date().toLocaleDateString("fr-FR");
   const t=document.createElement("table"),th=document.createElement("thead"),tr0=document.createElement("tr");SLCOLS.forEach(c=>{const x=document.createElement("th");x.textContent=c[0];tr0.appendChild(x)});th.appendChild(tr0);t.appendChild(th);
   const tb=document.createElement("tbody");rows.forEach(e=>{const tr=document.createElement("tr");SLCOLS.forEach(c=>{const x=document.createElement("td");const v=c[1](e)||"";x.textContent=c[2]?attDt(v):v;tr.appendChild(x)});tb.appendChild(tr)});t.appendChild(tb);
@@ -1884,7 +1885,7 @@ $("rl_xl").onclick=async()=>{const rows=RLROWS;if(!rows.length)return infoMsg("A
   if(await loadXLSX()){const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(aoa),"Résultats");const ok=await saveBlob(name,new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));return ok||infoMsg("Téléchargement indisponible ici.",false)}
   const q2=v=>'"'+String(v??"").replace(/"/g,'""')+'"';if(!await saveBlob(name.replace(".xlsx",".csv"),new Blob(["\ufeff"+aoa.map(r=>r.map(q2).join(";")).join("\r\n")],{type:"text/csv"})))infoMsg("Téléchargement indisponible ici.",false)};
 $("rl_pdf").onclick=()=>{const rows=RLROWS;if(!rows.length)return infoMsg("Aucune ligne à exporter.",false);
-  const p=$("plist");p.innerHTML="";const hh=document.createElement("h2");hh.textContent="PAROISSE NOTRE-DAME DE L'INCARNATION — RÉSULTATS DE FIN D'ANNÉE "+$("rl_y").value;
+  const p=$("plist");p.innerHTML="";const hh=document.createElement("h2");hh.textContent="PAROISSE NOTRE-DAME DE L’INCARNATION — RÉSULTATS DE FIN D'ANNÉE "+$("rl_y").value;
   const m=document.createElement("p");m.textContent="Catégorie : "+($("rl_c").value||"toutes")+" · Niveau : "+($("rl_n").value||"tous")+" · Résultat : "+($("rl_d").value||"tous")+" · "+rows.length+" ligne(s) · édité le "+new Date().toLocaleDateString("fr-FR");
   const t=document.createElement("table"),th=document.createElement("thead"),tr0=document.createElement("tr");RLCOLS.forEach(c=>{const x=document.createElement("th");x.textContent=c[0];tr0.appendChild(x)});th.appendChild(tr0);t.appendChild(th);
   const tb=document.createElement("tbody");rows.forEach(d=>{const tr=document.createElement("tr");RLCOLS.forEach(c=>{const x=document.createElement("td");const v=c[1](d)||"";x.textContent=c[2]?attDt(v):v;tr.appendChild(x)});tb.appendChild(tr)});t.appendChild(tb);
@@ -1951,12 +1952,12 @@ function idFixRecord(pid,n,old){if(!pid)return 0;const ch=IDF.filter(k=>n[k]&&sa
 idFixApply();
 // Archivage des données : uniquement sur action du SuperAdmin (inscriptions -> historique des inscriptions, pré-inscriptions -> historique des pré-inscriptions)
 DB.archDone=DB.archDone||{};DB.archLog=DB.archLog||[];
-const arRows=(y,st)=>DB.r.filter(d=>(d.annee||"2026-2027")===y&&(st==="ins"?d.statut==="ins":d.statut!=="ins"));
+const arRows=(y,st)=>DB.r.filter(d=>(d.annee||"2026-2027")===y&&(st==="ins"?d.statut==="ins":(d.statut!=="ins"||!d.preArch)));
 function arInit(){const s=$("ar_y"),cy=s.value,ys=new Set(DB.r.map(d=>d.annee||"2026-2027"));(DB.years||[]).forEach(y=>ys.add(y.id));s.innerHTML="";[...ys].sort().reverse().forEach(y=>{const o=document.createElement("option");o.textContent=y+(y===ANNEE?" (en cours)":"");o.value=y;s.appendChild(o)});s.value=[...s.options].some(o=>o.value===cy)?cy:(([...s.options].find(o=>o.value!==ANNEE)||s.options[0]||{}).value||ANNEE);arRender()}
 function arRender(){const y=$("ar_y").value,I=arRows(y,"ins"),Pp=arRows(y,"pre"),D=DB.archDone[y]||{};
   $("ar_ni").textContent=I.length;$("ar_np").textContent=Pp.length;$("ar_nt").textContent=I.length+Pp.length;
   $("ar_si").textContent=D.ins?"Déjà archivées le "+attDt(D.ins)+(I.length?" — "+I.length+" nouvelle(s) ligne(s) depuis":""):"Vont dans l'historique des inscriptions (anciens, attestations).";
-  $("ar_sp").textContent=D.pre?"Déjà archivées le "+attDt(D.pre)+(Pp.length?" — "+Pp.length+" nouvelle(s) ligne(s) depuis":""):"Pré-inscriptions non transformées en inscriptions.";
+  $("ar_sp").textContent=D.pre?"Déjà archivées le "+attDt(D.pre)+(Pp.length?" — "+Pp.length+" nouvelle(s) ligne(s) depuis":""):"Toutes les pré-inscriptions de l'année, y compris celles devenues inscriptions (elles restent aussi dans INSCRIPTION).";
   $("ar_bi").disabled=!I.length;$("ar_bp").disabled=!Pp.length;$("ar_bt").disabled=!(I.length+Pp.length);
   const C=(DB.comp||{})[y]||{},miss=I.filter(d=>!resGet(d)).length,w=$("ar_warn"),msgs=[];
   if(y===ANNEE)msgs.push("Attention : "+y+" est l'année en cours. Une fois ses inscriptions archivées, la compilation des résultats ne sera plus modifiable.");
@@ -1965,8 +1966,8 @@ function arRender(){const y=$("ar_y").value,I=arRows(y,"ins"),Pp=arRows(y,"pre")
   const h=$("ar_h");h.innerHTML="";if(!DB.archLog.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=5;td.style.fontStyle="italic";td.style.color="#7a6f5a";td.textContent="Aucun archivage pour le moment.";tr.appendChild(td);h.appendChild(tr)}
   DB.archLog.slice().reverse().forEach(a=>{const tr=document.createElement("tr");[a.y,a.t==="ins"?"INSCRIPTION":"PRÉ-INSCRIPTION",a.n,attDt(a.d),a.op].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});h.appendChild(tr)})}
 function arDo(y,st){const R=arRows(y,st),today=new Date().toISOString().slice(0,10);if(!R.length)return 0;
-  R.forEach(d=>{d.archive=today;if(st==="ins"){const r=resGet(d);if(r){d.decEntree=d.decision;d.decision=r}DB.arch.ins.push(d)}else DB.arch.pre.push(d)});
-  const S=new Set(R);DB.r=DB.r.filter(d=>!S.has(d));DB.archDone[y]=DB.archDone[y]||{};DB.archDone[y][st]=today;DB.archLog.push({y,t:st,n:R.length,d:today,op:opName()});
+  const mv=[];R.forEach(d=>{if(st==="ins"){arPreCopy(d,today);d.archive=today;const r=resGet(d);if(r){d.decEntree=d.decision;d.decision=r}DB.arch.ins.push(d);mv.push(d)}else if(d.statut==="ins")arPreCopy(d,today);else{d.archive=today;DB.arch.pre.push(d);mv.push(d)}});
+  const S=new Set(mv);DB.r=DB.r.filter(d=>!S.has(d));DB.archDone[y]=DB.archDone[y]||{};DB.archDone[y][st]=today;DB.archLog.push({y,t:st,n:R.length,d:today,op:opName()});
   log("Archivage "+(st==="ins"?"des inscriptions":"des pré-inscriptions")+" "+y+" ("+R.length+")","");return R.length}
 async function arGo(sts){const y=$("ar_y").value,n=sts.reduce((s,t)=>s+arRows(y,t).length,0);if(!n)return;
   if(!await askV("Archivage "+sts.map(t=>t==="ins"?"des INSCRIPTIONS":"des PRÉ-INSCRIPTIONS").join(" et ")+" de "+y+" : "+n+" ligne(s) passeront dans les tables d'historique."+(y===ANNEE?" "+y+" est l'année en cours.":"")))return;
@@ -2020,6 +2021,30 @@ function mdSet(t,d,k,l,inp,td){const old=d[k]==null?"":String(d[k]);let nv=inp.v
   td.classList.add("ok");setTimeout(()=>td.classList.remove("ok"),1600)}
 $("mg_x").onclick=mdClose;$("mg_q").oninput=()=>{MDPAGE=0;mdRender()};$("mg_p").onclick=()=>{MDPAGE--;mdRender()};$("mg_n").onclick=()=>{MDPAGE++;mdRender()};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("mgrid").hidden&&document.activeElement.tagName!=="INPUT")mdClose()});
+// Téléchargement direct en PDF (flèche ⬇ à côté de chaque bouton d'impression)
+let KTDL=null;const ktPrint=window.print.bind(window);
+function ktSlug(s){return sansAcc(String(s||"DOCUMENT")).replace(/[^A-Z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,70)||"DOCUMENT"}
+function ktLib(){return window.html2pdf?Promise.resolve(true):new Promise(res=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";s.onload=()=>res(true);s.onerror=()=>res(false);document.head.appendChild(s)})}
+window.print=function(){if(!KTDL)return ktPrint();const name=KTDL;KTDL=null;
+  let src=null,land=false;if(document.body.classList.contains("plist")){src=$("plist");const z=document.getElementById("plsz");land=!!(z&&/landscape/.test(z.textContent))}else if(!$("fiche").hidden)src=$("fiche").querySelector(".card");
+  if(!src){window.dispatchEvent(new Event("afterprint"));return}
+  const wrap=document.createElement("div");wrap.style.cssText="position:fixed;left:-12000px;top:0";const box=document.createElement("div");box.className="ktdlbox";box.style.width=land?"277mm":"190mm";wrap.appendChild(box);const c=src.cloneNode(true);c.removeAttribute("id");c.querySelectorAll(".noprint,.fbar").forEach(e=>e.remove());c.hidden=false;c.style.display="block";box.appendChild(c);document.body.appendChild(wrap);
+  const isAtt=!!box.querySelector(".attdoc");const num=(box.querySelector(".xnum")||{}).textContent||"";const h=(box.querySelector("h2")||{}).textContent||"";
+  const file=(isAtt?"ATTESTATION_"+ktSlug(num.replace("N°",""))+"_"+ktSlug((box.querySelector(".xidg b")||{}).textContent||""):name||ktSlug(h))+".pdf";
+  window.dispatchEvent(new Event("afterprint"));
+  ktLib().then(ok=>{if(!ok){wrap.remove();infoMsg("Téléchargement impossible : connexion internet nécessaire pour générer le PDF.",false);return}
+    return html2pdf().set({margin:isAtt?[3,10,3,10]:[8,8,10,8],filename:file,image:{type:"jpeg",quality:.96},html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",scrollX:0,scrollY:0},jsPDF:{unit:"mm",format:"a4",orientation:land?"landscape":"portrait"},pagebreak:{mode:["css","legacy"]}}).from(box).outputPdf("blob")
+      .then(b=>saveBlob(file,b)).then(r=>{if(r===false)infoMsg("Téléchargement indisponible ici : utilisez « Imprimer » puis « Enregistrer en PDF ».",false)})}).catch(e=>infoMsg("PDF non généré : "+e.message,false)).finally(()=>wrap.remove())};
+function ktDlName(b){const t=(b.closest("section")||document).querySelector("h2");if(b.id==="pr"){const f=window.KTFICHE||{};return ktSlug(($("ft")||{}).textContent)+"_"+ktSlug(f.code||f.mat||"")+"_"+ktSlug((f.nom||"")+" "+(f.prenom||""))}return ktSlug(t?t.textContent:"DOCUMENT")+"_"+new Date().toISOString().slice(0,10)}
+function ktDlAugment(){document.querySelectorAll("button").forEach(b=>{if(b.dataset.ktdl||b.classList.contains("ktdl"))return;if(!/Imprimer\s*(\/\s*)?PDF/i.test(b.textContent||""))return;b.dataset.ktdl="1";
+  const d=document.createElement("button");d.type="button";d.className=b.className+" ktdl";d.textContent="⬇ Télécharger";d.title="Télécharger le document en PDF";d.onclick=()=>{KTDL=ktDlName(b);b.click()};b.after(d)})}
+(function(){const st=document.createElement("style");st.textContent=".ktdlbox{background:#fff;color:#111;font:11px Arial,sans-serif}.ktdlbox table{width:100%;border-collapse:collapse}.ktdlbox th,.ktdlbox td{border:1px solid #999;padding:3px 4px;font-size:9px;text-align:left}.ktdlbox th{background:#1F5FAF;color:#fff}.ktdlbox h2{font:700 14px Arial;margin:0 0 6px}.ktdlbox>p,.ktdlbox>div>p{margin:0 0 6px}.ktdl{margin-left:6px}button.ktdl.lb{background:linear-gradient(#3fbf7f,#1f8a52)!important;color:#fff!important}";document.head.appendChild(st);
+  try{ktDlAugment();new MutationObserver(ktDlAugment).observe(document.documentElement,{childList:true,subtree:true})}catch(e){}})();
+// Paramètre : montant unique de l'inscription (fixé chaque année par le Curé)
+if(DB.cfg&&DB.cfg.montant===undefined)DB.cfg.montant=5000;
+// Archivage : une inscription garde sa trace dans l'historique des pré-inscriptions
+function arPreCopy(d,today){if(d.preArch)return;const c=JSON.parse(JSON.stringify(d));delete c._id;c.preCopy=1;c.archive=today;DB.arch.pre.push(c);d.preArch=1}
+const LSTC=["STATUT",d=>d.statut==="ins"?"INSCRIT(E)":"PRÉ-INSCRIT(E)"];const lcols=()=>LMODE==="lpre"?[...LCOLS,LSTC]:LCOLS;
 // Navigation & profils
 function closeDD(){document.querySelectorAll(".tnl>li.open").forEach(l=>{l.classList.remove("open");l.firstChild.setAttribute("aria-expanded","false")})}
 document.addEventListener("click",closeDD);
@@ -2166,12 +2191,12 @@ function telFix(){document.querySelectorAll(TELSEL).forEach(e=>{if(e.tagName!=="
 document.addEventListener("input",e=>{const el=e.target;if(el&&el.tagName==="INPUT"&&el.matches(TELSEL)){const v=el.value.replace(/\D/g,"").slice(0,10);if(v!==el.value)el.value=v}},true);
 try{telFix();new MutationObserver(telFix).observe(document.documentElement,{childList:true,subtree:true})}catch(e){}
 function valid(o,FL){const m=(FL||F).filter(f=>f[5]&&!o[f[0]]).map(f=>f[1]);if(m.length)return "Champs obligatoires : "+m.join(", ");if(o.cat==="ADULTE"&&o.niv==="5ÈME ANNÉE")return "La catégorie ADULTE se termine en 4ème année : le niveau 5ème année n'existe pas pour les adultes.";const b=(FL||F).filter(f=>TELK.includes(f[0])&&o[f[0]]&&String(o[f[0]]).replace(/\D/g,"").length!==10).map(f=>f[1]);return b.length?"Le contact doit comporter exactement 10 chiffres : "+b.join(", "):""}
-function montant(cat){return +(DB.cfg.frais[cat]||0)}
+function montant(){return +(DB.cfg.montant||0)}
 function updPay(p){p=p||"n_";
   const box=$(p==="n_"?"payN":"payA");if(!box)return;const m=DB.cfg.mode,cat=$(p+"cat")?$(p+"cat").value:"",amt=montant(cat);
   if(!box.dataset.built){box.dataset.built=1;
     box.innerHTML='<h3>Paiement des frais de catéchèse</h3><p class="pamt">Montant à payer : <b id="'+p+'pam"></b></p><div class="popts"><label class="popt" id="'+p+'po_par"><input type="radio" name="'+p+'pm" value="paroisse"><span><b>Paiement sur la paroisse</b><small>Auprès de l\'équipe de catéchèse : vous êtes pré-inscrit(e), l\'inscription se fait au paiement.</small><em></em></span></label><label class="popt" id="'+p+'po_mm"><input type="radio" name="'+p+'pm" value="mobile"><span><b>Paiement par Mobile Money</b><small>Débit direct en cliquant sur VALIDER : vous êtes pré-inscrit(e) et inscrit(e) aussitôt.</small><em></em></span></label></div><div id="'+p+'mmBox" class="mmBox" hidden><label>Choisissez votre moyen de paiement *</label><div class="ops" id="'+p+'ops"></div><label for="'+p+'mmNum">Numéro Mobile Money à débiter *</label><input id="'+p+'mmNum" inputmode="tel" autocomplete="tel" placeholder="Ex : 0700000000" style="max-width:280px"></div>'}
-  $(p+"pam").textContent=!cat?"selon la catégorie choisie":amt?fmt(amt):"montant non encore défini";
+  $(p+"pam").textContent=amt?fmt(amt):"montant non encore défini";
   [[p+"po_par","paroisse"],[p+"po_mm","mobile"]].forEach(([id,v])=>{const l=$(id),i=l.querySelector("input"),on=m===v;i.disabled=!on;i.checked=on;l.classList.toggle("off",!on);l.classList.toggle("sel",on);l.querySelector("em").textContent=on?"":"Option désactivée par l'administration"});
   $(p+"mmBox").hidden=m!=="mobile";
   const ob=$(p+"ops"),act=DB.cfg.ops.filter(o=>OPS[o]);if(!act.includes(SELOP[p]))SELOP[p]="";
@@ -2318,24 +2343,24 @@ function renderList(){
   if(H){fy.disabled=false;const o0=document.createElement("option");o0.value="";o0.textContent="Toutes";fy.appendChild(o0);[...new Set(src.map(d=>d.annee||"2026-2027"))].sort().reverse().forEach(y=>{const o=document.createElement("option");o.textContent=y;fy.appendChild(o)});fy.value=[...fy.options].some(o=>o.value===cy)?cy:""}
   else{const o=document.createElement("option");o.textContent=ANNEE;fy.appendChild(o);fy.disabled=true}
   const yr=H?fy.value:ANNEE;
-  const base=src.filter(visible).filter(d=>(LMODE!=="lins"||d.statut==="ins")&&(LMODE!=="lpre"||d.statut!=="ins")&&(!yr||(d.annee||"2026-2027")===yr));
+  const base=src.filter(visible).filter(d=>(LMODE!=="lins"||d.statut==="ins")&&(!yr||(d.annee||"2026-2027")===yr));
   const opts=(id,vals)=>{const s=$(id),c=s.value;s.innerHTML='<option value=""></option>';vals.forEach(v=>{const o=document.createElement("option");o.textContent=v;s.appendChild(o)});s.value=[...s.options].some(o=>o.value===c)?c:""};
   opts("fprof",[...new Set(base.map(d=>String(d.prof||"").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"fr",{numeric:true})));
   opts("fjour",[...new Set([...F.find(x=>x[0]==="jour")[3].split(";"),...base.map(d=>d.jour).filter(Boolean)])]);
   const fc=$("fcat").value,fn=$("fniv").value,fp=$("fprof").value,fj=$("fjour").value;
   let rows=base.filter(d=>(!fc||d.cat===fc)&&(!fn||d.niv===fn)&&(!fp||String(d.prof||"").trim()===fp)&&(!fj||d.jour===fj)&&(!f||((d.code||"")+" "+(d.mat||"")+" "+(recuOf(d)||"")+" "+d.nom+" "+d.prenom).toLowerCase().includes(f))).reverse();
-  if(LSORT.i>=0){const g=LCOLS[LSORT.i][1];rows=rows.slice().sort((a,b)=>String(g(a)).localeCompare(String(g(b)),"fr",{numeric:true})*LSORT.dir)}
+  if(LSORT.i>=0){const g=lcols()[LSORT.i][1];rows=rows.slice().sort((a,b)=>String(g(a)).localeCompare(String(g(b)),"fr",{numeric:true})*LSORT.dir)}
   const hr=$("lhead");hr.innerHTML="";
-  LCOLS.forEach((c,i)=>{const th=document.createElement("th"),si=document.createElement("span");si.className="si";si.textContent=LSORT.i===i?(LSORT.dir>0?"▲":"▼"):"⇕";th.append(si,document.createTextNode(lcolName(c,i)));th.title="Cliquer pour trier";th.onclick=()=>{LSORT=LSORT.i===i?{i:i,dir:-LSORT.dir}:{i:i,dir:1};renderList()};hr.appendChild(th)});
+  lcols().forEach((c,i)=>{const th=document.createElement("th"),si=document.createElement("span");si.className="si";si.textContent=LSORT.i===i?(LSORT.dir>0?"▲":"▼"):"⇕";th.append(si,document.createTextNode(lcolName(c,i)));th.title="Cliquer pour trier";th.onclick=()=>{LSORT=LSORT.i===i?{i:i,dir:-LSORT.dir}:{i:i,dir:1};renderList()};hr.appendChild(th)});
   const thf=document.createElement("th");thf.style.cursor="default";hr.appendChild(thf);
   $("cnt").textContent=rows.length;const tb=$("tb");tb.innerHTML="";
   LROWS=rows;const sz=+$("psz").value||25,pages=Math.max(1,Math.ceil(rows.length/sz));if(LPAGE>=pages)LPAGE=pages-1;if(LPAGE<0)LPAGE=0;
   const st=LPAGE*sz;$("pinfo").textContent=rows.length?"Lignes "+(st+1)+" à "+Math.min(st+sz,rows.length)+" sur "+rows.length+" — page "+(LPAGE+1)+" / "+pages:"Aucune ligne";
   $("pprev").disabled=LPAGE<=0;$("pnext").disabled=LPAGE>=pages-1;
   rows.slice(st,st+sz).forEach(d=>{const tr=document.createElement("tr");
-    LCOLS.forEach((c,i)=>{const td=document.createElement("td");let v=c[1](d);if(c[2])v=fdt(v);td.textContent=v;if(i===15&&v)td.style.cssText="font-weight:700;color:"+(DECC[v]||"inherit");tr.appendChild(td)});
+    lcols().forEach((c,i)=>{const td=document.createElement("td");let v=c[1](d);if(c[2])v=fdt(v);td.textContent=v;if(i===15&&v)td.style.cssText="font-weight:700;color:"+(DECC[v]||"inherit");tr.appendChild(td)});
     const t6=document.createElement("td"),b=document.createElement("button");b.className="btn sec";b.style.padding="4px 10px";b.textContent="Fiche";b.onclick=()=>showFiche(d);t6.appendChild(b);tr.appendChild(t6);tb.appendChild(tr)});
-  if(!rows.length)for(let k=0;k<3;k++){const tr=document.createElement("tr");for(let j=0;j<=LCOLS.length;j++){const td=document.createElement("td");td.innerHTML="&nbsp;";tr.appendChild(td)}tb.appendChild(tr)}}
+  if(!rows.length)for(let k=0;k<3;k++){const tr=document.createElement("tr");for(let j=0;j<=lcols().length;j++){const td=document.createElement("td");td.innerHTML="&nbsp;";tr.appendChild(td)}tb.appendChild(tr)}}
 let LPAGE=0;const relist=()=>{LPAGE=0;renderList()};
 $("flt").oninput=relist;$("fst").onchange=relist;$("fy").onchange=relist;$("fcat").onchange=relist;$("fniv").onchange=relist;$("fprof").onchange=relist;$("fjour").onchange=relist;$("psz").onchange=relist;
 $("pprev").onclick=()=>{LPAGE--;renderList()};$("pnext").onclick=()=>{LPAGE++;renderList()};
@@ -2390,11 +2415,11 @@ $("xl").onclick=async()=>{const rows=LROWS;if(!rows.length)return infoMsg("Aucun
   const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';const csv="\ufeff"+[EXCOLS.map(c=>c[0]).map(q).join(";"),...rows.map(d=>EXCOLS.map(c=>q(c[1](d))).join(";"))].join("\r\n");
   if(!await saveBlob(name.replace(".xlsx",".csv"),new Blob([csv],{type:"text/csv"})))infoMsg("Téléchargement indisponible ici.",false)};
 $("xpdf").onclick=()=>{const rows=LROWS;if(!rows.length)return infoMsg("Aucune ligne à exporter.",false);
-  const p=$("plist");p.innerHTML="";const h=document.createElement("h2");h.textContent="PAROISSE NOTRE-DAME DE L'INCARNATION — "+$("ltitle").textContent;
+  const p=$("plist");p.innerHTML="";const h=document.createElement("h2");h.textContent="PAROISSE NOTRE-DAME DE L’INCARNATION — "+$("ltitle").textContent;
   const m=document.createElement("p");m.textContent=listMeta()+" · "+rows.length+" ligne(s) · édité le "+new Date().toLocaleDateString("fr-FR");
   const t=document.createElement("table"),th=document.createElement("thead"),tr0=document.createElement("tr");
-  LCOLS.map((c,i)=>lcolName(c,i)).forEach(x=>{const c=document.createElement("th");c.textContent=x;tr0.appendChild(c)});th.appendChild(tr0);t.appendChild(th);
-  const tb=document.createElement("tbody");rows.forEach(d=>{const tr=document.createElement("tr");LCOLS.map(c=>c[2]?fdt(c[1](d)):c[1](d)).forEach(x=>{const c=document.createElement("td");c.textContent=x||"";tr.appendChild(c)});tb.appendChild(tr)});t.appendChild(tb);
+  lcols().map((c,i)=>lcolName(c,i)).forEach(x=>{const c=document.createElement("th");c.textContent=x;tr0.appendChild(c)});th.appendChild(tr0);t.appendChild(th);
+  const tb=document.createElement("tbody");rows.forEach(d=>{const tr=document.createElement("tr");lcols().map(c=>c[2]?fdt(c[1](d)):c[1](d)).forEach(x=>{const c=document.createElement("td");c.textContent=x||"";tr.appendChild(c)});tb.appendChild(tr)});t.appendChild(tb);
   p.append(h,m,t);const ps=document.createElement("style");ps.id="plsz";ps.textContent="@page{size:A4 landscape;margin:8mm}#plist th,#plist td{font-size:8.5px!important;padding:2px 3px!important}#plist th{background:#1F5FAF!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}";document.head.appendChild(ps);document.body.classList.add("plist");log("Export PDF ("+rows.length+" lignes)","");
   const done=()=>{document.body.classList.remove("plist");p.innerHTML="";const z=document.getElementById("plsz");if(z)z.remove();window.removeEventListener("afterprint",done)};window.addEventListener("afterprint",done);window.print();setTimeout(()=>{if(!matchMedia("print").matches)done()},1500)};
 
@@ -2446,7 +2471,7 @@ $("pxl").onclick=async()=>{if(!PDATA.length)return infoMsg("Aucune inscription �
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([["OPERATEUR","DATE_INSCRIPTION","MATRICULE","CODE","NOM","PRENOM","ANNEECATECHESE","CATEGORIE","NIVEAU","TYPE","DECISION"],...PDATA.map(d=>[insOp(d),insDate(d),d.mat||d.code,recuOf(d),d.nom,d.prenom,d.annee,d.cat,d.niv,PANC(d)?"ANCIEN(NE)":"NOUVEAU(ELLE)",d.decision||""])]),"Détail");
   if(await saveBlob("POINT_INSCRIPTIONS_OPERATEURS.xlsx",new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"})))log("Export Excel point des inscriptions","");else infoMsg("Téléchargement indisponible ici.",false)};
 $("ppdf").onclick=()=>{if(!PDATA.length)return infoMsg("Aucune inscription à exporter.",false);const p=$("plist");p.innerHTML="";
-  const h=document.createElement("h2");h.textContent="PAROISSE NOTRE-DAME DE L'INCARNATION — POINT DES INSCRIPTIONS PAR OPÉRATEUR(TRICE)";const m=document.createElement("p");m.textContent=pinsMeta()+" · édité le "+new Date().toLocaleDateString("fr-FR");
+  const h=document.createElement("h2");h.textContent="PAROISSE NOTRE-DAME DE L’INCARNATION — POINT DES INSCRIPTIONS PAR OPÉRATEUR(TRICE)";const m=document.createElement("p");m.textContent=pinsMeta()+" · édité le "+new Date().toLocaleDateString("fr-FR");
   const t=document.createElement("table");t.innerHTML="<thead><tr><th>Opérateur(trice)</th><th>Inscriptions</th><th>Enfants</th><th>Jeunes</th><th>Adultes</th><th>Nouveaux</th><th>Anciens</th><th>Montant encaissé</th><th>Du</th><th>Au</th></tr></thead><tbody></tbody>";
   pinsSynth().forEach(r=>{const tr=document.createElement("tr");r.forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});t.tBodies[0].appendChild(tr)});
   const ft=$("ptf").rows[0];if(ft){const tr=document.createElement("tr");[...ft.cells].slice(0,11).filter((c,i)=>i!==2).forEach(c=>{const td=document.createElement("td");td.style.fontWeight="700";td.textContent=c.textContent;tr.appendChild(td)});t.tBodies[0].appendChild(tr)}
@@ -2523,7 +2548,7 @@ const ACOLS=[["N°",d=>d.code],["CELLULAIREANNEECATECHESE",d=>d.cak||dig(d.c1)+d
 $("axl").onclick=async()=>{if(!AROWS.length)return infoMsg("Aucune ligne à exporter.",false);if(!await loadXLSX())return infoMsg("Impossible de charger le lecteur Excel (connexion internet nécessaire).",false);
   const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([ACOLS.map(c=>c[0]),...AROWS.map(d=>ACOLS.map(c=>c[1](d)??""))]),"ANIMATEUR");
   if(await saveBlob("LISTE_ANIMATEURS.xlsx",new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"})))log("Export Excel animateurs ("+AROWS.length+")","");else infoMsg("Téléchargement indisponible ici.",false)};
-$("apdf").onclick=()=>{if(!AROWS.length)return infoMsg("Aucune ligne à exporter.",false);const p=$("plist");p.innerHTML="";const h=document.createElement("h2");h.textContent="PAROISSE NOTRE-DAME DE L'INCARNATION — LISTE DES INSCRITS ANIMATEURS";
+$("apdf").onclick=()=>{if(!AROWS.length)return infoMsg("Aucune ligne à exporter.",false);const p=$("plist");p.innerHTML="";const h=document.createElement("h2");h.textContent="PAROISSE NOTRE-DAME DE L’INCARNATION — LISTE DES INSCRITS ANIMATEURS";
   const m=document.createElement("p");m.textContent="Année : "+($("ay").value||"toutes")+" · Catégorie : "+($("acat").value||"toutes")+" · Niveau : "+($("aniv").value||"tous")+" · Jour : "+($("ajour").value||"tous")+" · "+AROWS.length+" ligne(s) · édité le "+new Date().toLocaleDateString("fr-FR");
   const t=document.createElement("table");t.innerHTML="<thead><tr><th>N°</th><th>Civilité</th><th>Nom</th><th>Prénoms</th><th>Contact 1</th><th>Contact 2</th><th>Catégorie</th><th>Niveau</th><th>Jour</th><th>Profession</th><th>Année KT</th></tr></thead><tbody></tbody>";
   AROWS.forEach(d=>{const tr=document.createElement("tr");[d.code,d.civ,d.nom,d.prenom,d.c1,d.c2,d.cat,d.niv,d.jour,d.prof,d.annee].forEach(v=>{const td=document.createElement("td");td.textContent=v||"";tr.appendChild(td)});t.tBodies[0].appendChild(tr)});
@@ -2625,7 +2650,7 @@ function renderParam(){
   $("ycur").innerHTML="";const b=document.createElement("b");b.textContent=DB.cur?"Année en cours : "+DB.cur:"Aucune année ouverte";$("ycur").appendChild(b);
   document.querySelectorAll('input[name=cfgmode]').forEach(i=>{i.checked=i.value===DB.cfg.mode;i.closest(".popt").classList.toggle("sel",i.checked);i.onchange=()=>document.querySelectorAll('input[name=cfgmode]').forEach(j=>j.closest(".popt").classList.toggle("sel",j.checked))});
   const co=$("cfgops");co.innerHTML="";Object.keys(OPS).forEach(o=>{const l=document.createElement("label");l.className="op";l.style.margin="0";l.innerHTML='<input type="checkbox" style="width:auto"><i></i><span></span>';l.querySelector("input").checked=DB.cfg.ops.includes(o);l.querySelector("input").value=o;l.querySelector("i").style.background=OPS[o];l.querySelector("span").textContent=o;co.appendChild(l)});
-  $("fe").value=DB.cfg.frais.ENFANT;$("fj").value=DB.cfg.frais.JEUNE;$("fa2").value=DB.cfg.frais.ADULTE}
+  $("fmt1").value=DB.cfg.montant||""}
 // Import de l'historique (Excel)
 const IDB={db:null,open(){return new Promise(res=>{try{const r=indexedDB.open("ktndi",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>{this.db=r.result;res(r.result)};r.onerror=()=>res(null)}catch(e){res(null)}})},
   async get(k){const db=this.db||await this.open();if(!db)return null;return new Promise(res=>{try{const q=db.transaction("kv").objectStore("kv").get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(null)}catch(e){res(null)}})},
@@ -2915,7 +2940,7 @@ $("psv").onclick=async()=>{
   const md=(document.querySelector('input[name=cfgmode]:checked')||{}).value||"paroisse",ops=[...document.querySelectorAll("#cfgops input:checked")].map(i=>i.value);
   if(md==="mobile"&&!ops.length){$("pmsg").className="err";$("pmsg").textContent="Cochez au moins un opérateur Mobile Money.";return}
   if(!await askV("Enregistrement des paramètres de paiement."))return;
-  DB.cfg.mode=md;DB.cfg.ops=ops;DB.cfg.frais={ENFANT:$("fe").value,JEUNE:$("fj").value,ADULTE:$("fa2").value};
+  DB.cfg.mode=md;DB.cfg.ops=ops;DB.cfg.montant=+$("fmt1").value||0;
   log("Paramètres de paiement : "+(DB.cfg.mode==="mobile"?"Mobile Money":"paroisse"),"");save();updPay("n_");updPay("a_");$("pmsg").textContent="";await infoMsg("Enregistrement réussi");renderParam()};
 $("tnb").onclick=e=>{e.stopPropagation();const o=$("tnl").classList.toggle("open");$("tnb").setAttribute("aria-expanded",String(o))};
 save();

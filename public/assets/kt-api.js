@@ -40,6 +40,11 @@
         if (!d || typeof d !== "object") return;
         var id = a[2] ? a[2](d) : null;
         if (!id) { if (!d._id) d._id = uid(); id = d._id; }
+        if (a[0] === "r") { // une pré-inscription reste dans PRÉINSCRIPTION ; inscrite, elle est AUSSI dans INSCRIPTION
+          out.set("preinscription|" + id, { t: "preinscription", id: String(id), d: d });
+          if (d.statut === "ins") out.set("inscription|" + id, { t: "inscription", id: String(id), d: d });
+          return;
+        }
         var t = typeof a[1] === "function" ? a[1](d) : a[1];
         out.set(t + "|" + id, { t: t, id: String(id), d: d });
       });
@@ -51,7 +56,9 @@
   }
   function build(st) {
     var T = st.tables || {}, P = st.params || {}, g = function (n) { return T[n] || []; };
-    var DB = { r: g("inscription").concat(g("preinscription")), h: g("historique_operation"), arch: { ins: g("historique_inscription"), pre: g("historique_preinscription") },
+    var seen = {}, R = [];
+    g("inscription").concat(g("preinscription")).forEach(function (d) { var k = d._id || JSON.stringify(d); if (!seen[k]) { seen[k] = 1; R.push(d); } });
+    var DB = { r: R, h: g("historique_operation"), arch: { ins: g("historique_inscription"), pre: g("historique_preinscription") },
       anim: g("animateur"), fc: g("formation_continue"), bur: g("bureau_membre"), users: g("utilisateur"), att: g("attestation_catechumene"), attA: g("attestation_animateur"),
       archLog: g("archivage"), sac: {}, idfix: {}, comp: {}, compRes: {} };
     var yrs = g("annee_catechetique"); if (yrs.length) DB.years = yrs;
@@ -123,7 +130,7 @@
       var r = xhr("POST", "public.php?action=anciens", { q: q, dn: dn || "" }); if (!r.ok) return;
       DB.arch.ins = r.hist || [];
       var ids = new Set(DB.r.map(function (d) { return d._id; }));
-      (r.encours || []).forEach(function (d) { if (!ids.has(d._id)) { DB.r.push(d); SNAP.set((d.statut === "ins" ? "inscription" : "preinscription") + "|" + d._id, JSON.stringify(d)); } });
+      (r.encours || []).forEach(function (d) { if (!ids.has(d._id)) { ids.add(d._id); DB.r.push(d); SNAP.set("preinscription|" + d._id, JSON.stringify(d)); if (d.statut === "ins") SNAP.set("inscription|" + d._id, JSON.stringify(d)); } });
     },
     pubAnimateurs: function (q, DB) {
       var r = xhr("POST", "public.php?action=animateurs", { q: q }); if (!r.ok) return;
